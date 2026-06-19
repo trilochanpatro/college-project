@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance System - Diagnostic Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; }
+    .test-item {
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 4px solid #ccc;
+      background: #f9f9f9;
+    }
+    .test-item.pass {
+      border-left-color: #28a745;
+      background: #d4edda;
+    }
+    .test-item.fail {
+      border-left-color: #dc3545;
+      background: #f8d7da;
+    }
+    .status { font-weight: bold; }
+    .pass .status { color: #28a745; }
+    .fail .status { color: #dc3545; }
+    button {
+      background: #667eea;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 10px 5px 10px 0;
+    }
+    button:hover {
+      background: #764ba2;
+    }
+    pre {
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Attendance System - Diagnostic Test</h1>
+    <p>This page will test if everything is loaded correctly.</p>
+    
+    <div id="results"></div>
+    
+    <hr>
+    <h2>Quick Actions</h2>
+    <button onclick="clearStorage()">🗑️ Clear LocalStorage</button>
+    <button onclick="goToLogin()">🔑 Go to Login</button>
+    <button onclick="autoLogin()">⚡ Auto-Login as student1</button>
+    <button onclick="goToStudent()">👤 Go to Student Dashboard</button>
+    
+    <hr>
+    <h2>Data Debug Info</h2>
+    <pre id="dataInfo">Loading...</pre>
+  </div>
+
+  <script src="js/script.js" defer></script>
+  <script>
+    function runTests() {
+      const results = document.getElementById('results');
+      let html = '';
+      
+      // Test 1: Check if script.js loaded
+      const test1 = typeof data !== 'undefined' && data !== null;
+      html += `<div class="test-item ${test1 ? 'pass' : 'fail'}">
+        <span class="status">${test1 ? '✓ PASS' : '✗ FAIL'}</span> - script.js data loaded: ${test1 ? 'YES' : 'NO'}
+      </div>`;
+      
+      // Test 2: Check users
+      const test2 = typeof data !== 'undefined' && data.users && data.users.length > 0;
+      html += `<div class="test-item ${test2 ? 'pass' : 'fail'}">
+        <span class="status">${test2 ? '✓ PASS' : '✗ FAIL'}</span> - Users loaded: ${test2 ? data.users.length + ' users' : 'NO DATA'}
+      </div>`;
+      
+      // Test 3: Check students
+      const test3 = typeof data !== 'undefined' && data.students && data.students.length > 0;
+      html += `<div class="test-item ${test3 ? 'pass' : 'fail'}">
+        <span class="status">${test3 ? '✓ PASS' : '✗ FAIL'}</span> - Students loaded: ${test3 ? data.students.length + ' students' : 'NO DATA'}
+      </div>`;
+      
+      // Test 4: Check attendance sessions
+      const test4 = typeof data !== 'undefined' && data.attendanceSessions && data.attendanceSessions.length > 0;
+      html += `<div class="test-item ${test4 ? 'pass' : 'fail'}">
+        <span class="status">${test4 ? '✓ PASS' : '✗ FAIL'}</span> - Attendance sessions: ${test4 ? data.attendanceSessions.length + ' sessions' : 'NO DATA'}
+      </div>`;
+      
+      // Test 5: Check attendance details
+      const test5 = typeof data !== 'undefined' && data.attendanceDetails && data.attendanceDetails.length > 0;
+      html += `<div class="test-item ${test5 ? 'pass' : 'fail'}">
+        <span class="status">${test5 ? '✓ PASS' : '✗ FAIL'}</span> - Attendance details: ${test5 ? data.attendanceDetails.length + ' records' : 'NO DATA'}
+      </div>`;
+      
+      // Test 6: Check sessionStorage
+      const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
+      const test6 = currentUser !== null;
+      html += `<div class="test-item ${test6 ? 'pass' : 'fail'}">
+        <span class="status">${test6 ? '✓ PASS' : '✗ FAIL'}</span> - Current user in session: ${test6 ? currentUser.username + ' (' + currentUser.role + ')' : 'NOT LOGGED IN'}
+      </div>`;
+      
+      results.innerHTML = html;
+      
+      // Update data info
+      const dataInfo = document.getElementById('dataInfo');
+      dataInfo.textContent = `
+Total Data Stats:
+- Users: ${data.users ? data.users.length : 0}
+- Students: ${data.students ? data.students.length : 0}
+- Faculty: ${data.faculty ? data.faculty.length : 0}
+- Departments: ${data.departments ? data.departments.length : 0}
+- Courses: ${data.courses ? data.courses.length : 0}
+- Subjects: ${data.subjects ? data.subjects.length : 0}
+- Attendance Sessions: ${data.attendanceSessions ? data.attendanceSessions.length : 0}
+- Attendance Details: ${data.attendanceDetails ? data.attendanceDetails.length : 0}
+
+Current User: ${JSON.stringify(currentUser, null, 2)}
+      `;
+    }
+    
+    function clearStorage() {
+      localStorage.clear();
+      sessionStorage.clear();
+      alert('✓ Cleared all storage. Reload page to test.');
+      location.reload();
+    }
+    
+    function goToLogin() {
+      window.location.href = 'html/login.html';
+    }
+    
+    function autoLogin() {
+      const user = { id: 3, username: 'student1', password: 'student', role: 'student' };
+      sessionStorage.setItem('currentUser', JSON.stringify(user));
+      alert('✓ Auto-logged in as student1. Going to dashboard...');
+      window.location.href = 'html/student.html';
+    }
+    
+    function goToStudent() {
+      window.location.href = 'html/student.html';
+    }
+    
+    // Run tests after script.js loads
+    setTimeout(runTests, 500);
+  </script>
+</body>
+</html>

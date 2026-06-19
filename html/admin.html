@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Attendance System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/attendance-system/css/style.css">
+  <style>
+    /* Admin Dashboard Mobile Responsive Styles */
+    @media (max-width: 992px) {
+      main {
+        margin-left: 0 !important;
+      }
+
+      #sidebar {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        width: 200px;
+        height: calc(100vh - 60px);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 999;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #sidebar.show {
+        transform: translateX(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      main {
+        padding: 12px !important;
+      }
+
+      h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+      }
+
+      h5 {
+        font-size: 14px;
+      }
+
+      .card {
+        margin-bottom: 15px;
+      }
+
+      .card-body {
+        padding: 12px !important;
+      }
+
+      .card-header {
+        padding: 10px 12px !important;
+        font-size: 14px;
+      }
+
+      .row {
+        margin-right: -6px;
+        margin-left: -6px;
+      }
+
+      .row > [class*="col-"] {
+        padding-right: 6px;
+        padding-left: 6px;
+      }
+
+      .form-control, .form-select {
+        font-size: 13px;
+        padding: 0.5rem 0.75rem;
+      }
+
+      .btn {
+        font-size: 13px;
+        padding: 0.5rem 0.75rem;
+      }
+
+      .table-responsive {
+        font-size: 12px;
+      }
+
+      .table thead th {
+        padding: 8px 4px;
+        font-size: 12px;
+      }
+
+      .table tbody td {
+        padding: 8px 4px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      main {
+        padding: 10px !important;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      .navbar-brand {
+        font-size: 14px;
+      }
+
+      .card {
+        margin-bottom: 12px;
+      }
+
+      .card-body {
+        padding: 10px !important;
+      }
+
+      .row {
+        margin-right: -5px;
+        margin-left: -5px;
+      }
+
+      .row > [class*="col-"] {
+        padding-right: 5px;
+        padding-left: 5px;
+        margin-bottom: 10px;
+      }
+
+      .form-control, .form-select {
+        font-size: 12px;
+        padding: 0.4rem 0.6rem;
+      }
+
+      .btn {
+        font-size: 12px;
+        padding: 0.4rem 0.6rem;
+      }
+
+      .btn-block {
+        display: block;
+        width: 100%;
+      }
+
+      .table-responsive {
+        font-size: 11px;
+      }
+
+      .table thead th {
+        padding: 6px 3px;
+        font-size: 11px;
+      }
+
+      .table tbody td {
+        padding: 6px 3px;
+        font-size: 11px;
+      }
+
+      .card-title {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .text-white h3 {
+        font-size: 24px;
+      }
+
+      h3 {
+        font-size: 22px;
+      }
+
+      canvas {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+
+      .card h3 {
+        font-size: 20px;
+      }
+
+      .row > [class*="col-md-"] {
+        width: 100%;
+        max-width: 100%;
+        padding-right: 5px;
+        padding-left: 5px;
+      }
+
+      .col-md-3, .col-md-4, .col-md-5, .col-md-6 {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .form-group {
+        margin-bottom: 12px;
+      }
+
+      .nav-link {
+        font-size: 13px;
+        padding: 0.5rem 0.75rem !important;
+      }
+    }
+
+    /* Touch-friendly buttons for mobile */
+    @media (hover: none) and (pointer: coarse) {
+      button, .btn, a.btn {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        min-height: 44px;
+      }
+    }
+
+    /* Professional Data Interface Styling for Admin */
+    .data-table-wrapper {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .data-table-wrapper table {
+      margin-bottom: 0;
+    }
+
+    .data-table-wrapper thead {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .data-table-wrapper thead th {
+      padding: 18px 15px;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: none;
+      vertical-align: middle;
+    }
+
+    .data-table-wrapper tbody td {
+      padding: 15px;
+      border-color: #f0f0f0;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+
+    .data-table-wrapper tbody tr {
+      transition: all 0.3s ease;
+    }
+
+    .data-table-wrapper tbody tr:hover {
+      background-color: #f8f9ff;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Status Badge Styles - Consistent */
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      min-width: 70px;
+      text-align: center;
+    }
+
+    .status-active {
+      background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+      color: #0a5f4f;
+    }
+
+    .status-inactive {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      color: #8b0000;
+    }
+
+    .status-pending {
+      background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+      color: #6b4423;
+    }
+
+    /* Real-time Update Animation */
+    @keyframes liveUpdate {
+      0% { background-color: rgba(102, 126, 234, 0.1); }
+      100% { background-color: transparent; }
+    }
+
+    .live-updated {
+      animation: liveUpdate 0.8s ease-out;
+    }
+
+    /* Admin Metrics Card */
+    .metric-card-admin {
+      border-radius: 12px;
+      padding: 25px;
+      text-align: center;
+      border: none;
+      transition: all 0.3s ease;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .metric-card-admin:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .metric-card-admin h3 {
+      font-weight: 700;
+      margin: 10px 0;
+      font-size: 32px;
+    }
+
+    .metric-card-admin p {
+      color: #999;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin: 0;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Info Panel Professional Style */
+    .info-panel-admin {
+      background: linear-gradient(135deg, #f5f7fa 0%, #f9f9fb 100%);
+      border-left: 4px solid #667eea;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .info-panel-admin-header {
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .info-item-admin {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .info-item-admin:last-child {
+      border-bottom: none;
+    }
+
+    .info-label-admin {
+      color: #666;
+      font-weight: 500;
+    }
+
+    .info-value-admin {
+      color: #333;
+      font-weight: 600;
+    }
+
+    /* Section Header Consistency */
+    .section-header-admin {
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+
+    .section-header-admin h3 {
+      color: #333;
+      font-weight: 700;
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .section-header-admin .timestamp {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+    }
+
+    /* Professional Button Styles */
+    .btn-admin-pro {
+      border-radius: 8px;
+      font-weight: 600;
+      padding: 10px 20px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 13px;
+    }
+
+    .btn-admin-pro:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Responsive Data Display for Admin */
+    @media (max-width: 992px) {
+      main {
+        padding: 15px !important;
+      }
+
+      #sidebar {
+        width: 180px;
+      }
+
+      .metric-card-admin {
+        padding: 20px;
+      }
+
+      .metric-card-admin h3 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      main {
+        padding: 12px !important;
+        margin-left: 0 !important;
+      }
+
+      #sidebar {
+        position: fixed;
+        left: 0;
+        top: 56px;
+        width: 220px;
+        height: calc(100vh - 56px);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 999;
+      }
+
+      #sidebar.show {
+        transform: translateX(0);
+      }
+
+      .data-table-wrapper thead th {
+        padding: 12px 10px;
+        font-size: 12px;
+      }
+
+      .data-table-wrapper tbody td {
+        padding: 12px 10px;
+        font-size: 12px;
+      }
+
+      .metric-card-admin {
+        padding: 18px;
+      }
+
+      .metric-card-admin h3 {
+        font-size: 26px;
+      }
+
+      .info-panel-admin {
+        padding: 15px;
+      }
+
+      .info-item-admin {
+        font-size: 12px;
+      }
+
+      .section-header-admin h3 {
+        font-size: 18px;
+      }
+
+      .form-control-enhanced {
+        font-size: 13px;
+        padding: 8px 12px;
+      }
+
+      .btn-professional {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      main {
+        padding: 10px !important;
+      }
+
+      .data-table-wrapper {
+        font-size: 11px;
+        border-radius: 8px;
+        overflow-x: auto;
+      }
+
+      .data-table-wrapper thead th,
+      .data-table-wrapper tbody td {
+        padding: 8px;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      .status-badge {
+        padding: 4px 8px;
+        font-size: 10px;
+        min-width: 55px;
+      }
+
+      .metric-card-admin {
+        padding: 15px;
+      }
+
+      .metric-card-admin h3 {
+        font-size: 24px;
+      }
+
+      .info-panel-admin {
+        padding: 12px;
+        margin-bottom: 15px;
+      }
+
+      .section-header-admin h3 {
+        font-size: 16px;
+      }
+
+      .section-header-admin .timestamp {
+        font-size: 11px;
+      }
+
+      .btn-professional {
+        padding: 8px 10px;
+        font-size: 11px;
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      .form-control-enhanced {
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+
+      .row > [class*="col-"] {
+        margin-bottom: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .data-table-wrapper {
+        font-size: 10px;
+      }
+
+      .data-table-wrapper thead th,
+      .data-table-wrapper tbody td {
+        padding: 6px 4px;
+        font-size: 10px;
+      }
+
+      .section-header-admin h3 {
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+
+      .metric-card-admin {
+        padding: 12px;
+      }
+
+      .metric-card-admin h3 {
+        font-size: 22px;
+        margin: 8px 0;
+      }
+
+      .metric-card-admin p {
+        font-size: 11px;
+      }
+
+      .btn-professional {
+        padding: 10px 8px;
+        font-size: 10px;
+        border-radius: 6px;
+      }
+
+      .form-control-enhanced {
+        font-size: 11px;
+        padding: 5px 8px;
+        border-radius: 6px;
+      }
+    }
+
+    /* Touch-friendly buttons for mobile */
+    @media (hover: none) and (pointer: coarse) {
+      button, .btn, .btn-professional, a.btn {
+        min-height: 44px;
+        padding: 12px 15px !important;
+      }
+
+      .btn-sm {
+        min-height: 38px;
+        padding: 8px 12px !important;
+      }
+    }
+
+  </style>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="headerNav">
+    <div class="container-fluid">
+      <button class="btn btn-sm btn-outline-light d-md-none me-2" onclick="document.getElementById('sidebar').classList.toggle('show')">☰</button>
+      <a class="navbar-brand" href="#">College Logo | Attendance System</a>
+      <div class="ms-auto d-flex align-items-center">
+        <button class="btn btn-outline-light btn-sm me-2" onclick="toggleTheme()">🌓</button>
+        <div class="navbar-nav" id="userInfo"></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="d-flex">
+    <div class="sidebar bg-light p-3 vh-100" id="sidebar" style="width: 250px; position: fixed;"></div>
+    <main class="flex-grow-1 p-3" style="margin-left: 250px;">
+      
+      <!-- Dashboard Section -->
+      <div id="adminDash" class="section">
+        <div class="section-header-admin">
+          <h3>📊 Admin Dashboard</h3>
+          <div class="timestamp" id="dashTimestamp"></div>
+        </div>
+        
+        <div class="row mb-4">
+          <div class="col-md-6 col-lg-3">
+            <div class="metric-card-admin">
+              <h3 id="totalStudents">0</h3>
+              <p>Total Students</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="metric-card-admin">
+              <h3 id="totalFaculty">0</h3>
+              <p>Faculty Members</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="metric-card-admin">
+              <h3 id="totalSubjects">0</h3>
+              <p>Total Subjects</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="metric-card-admin">
+              <h3 id="todaySessions">0</h3>
+              <p>Today's Sessions</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="section-header-admin">
+              <h5 style="margin:0;">Department-wise Attendance %</h5>
+            </div>
+            <canvas id="deptChart" width="400" height="200"></canvas>
+          </div>
+          <div class="col-md-4">
+            <div class="info-panel-admin">
+              <div class="info-panel-admin-header">Quick Actions</div>
+              <button class="btn btn-admin-pro w-100 mb-2" onclick="showSection('students')" style="background: #667eea; color: white; border: none;">👥 Add Student</button>
+              <button class="btn btn-admin-pro w-100 mb-2" onclick="showSection('faculty')" style="background: #764ba2; color: white; border: none;">👨‍🏫 Add Faculty</button>
+              <button class="btn btn-admin-pro w-100" onclick="showSection('tenDayAnalytics')" style="background: #667eea; color: white; border: none;">📈 View Analytics</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10-Day Stats Section -->
+      <div id="tenDayAnalytics" class="section" style="display:none;">
+        <div class="section-header-admin">
+          <h3>📊 Last 10 Days - Comprehensive Analysis</h3>
+          <div class="timestamp" id="analyticsTimestamp"></div>
+        </div>
+        
+        <div class="row mb-4">
+          <div class="col-md-6 col-lg-3">
+            <div class="metric-card-admin">
+              <h3 id="anal-sessions">0</h3>
+              <p>Total Sessions</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="metric-card-admin">
+              <h3 id="anal-avgperc">0%</h3>
+              <p>Avg Attendance %</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="metric-card-admin">
+              <h3 id="anal-defaulters">0</h3>
+              <p>Defaulters (&lt;75%)</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="metric-card-admin">
+              <h3 id="anal-goodstand">0</h3>
+              <p>Good Standing (&gt;85%)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="section-header-admin">
+              <h5 style="margin:0;">Department-wise Attendance</h5>
+            </div>
+            <div class="data-table-wrapper">
+              <table class="table table-hover" id="deptAnalTable">
+                <thead>
+                  <tr>
+                    <th>Department</th>
+                    <th>Students</th>
+                    <th>Avg %</th>
+                    <th>Defaulters</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="section-header-admin">
+              <h5 style="margin:0;">Subject-wise Performance</h5>
+            </div>
+            <div class="data-table-wrapper">
+              <table class="table table-hover" id="subAnalTable">
+                <thead>
+                  <tr>
+                    <th>Subject</th>
+                    <th>Sessions</th>
+                    <th>Avg %</th>
+                    <th>Low Attendance</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 25px;">
+          <div class="section-header-admin">
+            <h5 style="margin:0;">Defaulter List (&lt; 75% in past 10 days)</h5>
+          </div>
+          <div class="form-group mb-3">
+            <input type="text" class="form-control form-control-enhanced" id="defaulterFilter" placeholder="🔍 Search by name or roll number...">
+          </div>
+          <div class="data-table-wrapper">
+            <table class="table table-hover" id="defaultersTable">
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Name</th>
+                  <th>Department</th>
+                  <th>Attendance %</th>
+                  <th>Classes Missed</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Departments Section -->
+      <div id="depts" class="section" style="display:none;">
+        <h2>Manage Departments</h2>
+        <form id="addDeptForm" class="mb-3">
+          <div class="row">
+            <div class="col-md-6"><input type="text" class="form-control" id="deptName" placeholder="Department Name" required></div>
+            <div class="col-md-6"><input type="text" class="form-control" id="deptDesc" placeholder="Description"></div>
+          </div>
+          <button type="submit" class="btn btn-success mt-2">Add Department</button>
+        </form>
+        <table class="table" id="deptsTable">
+          <thead><tr><th>ID</th><th>Name</th><th>Description</th><th>Actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Courses Section -->
+      <div id="courses" class="section" style="display:none;">
+        <h2>Manage Courses</h2>
+        <form id="addCourseForm" class="mb-3">
+          <div class="row">
+            <div class="col-md-5"><input type="text" class="form-control" id="courseName" placeholder="Course Name" required></div>
+            <div class="col-md-5"><select class="form-control" id="courseDept" required><option value="">Select Dept</option></select></div>
+            <div class="col-md-2"><button type="submit" class="btn btn-success w-100">Add Course</button></div>
+          </div>
+        </form>
+        <table class="table" id="coursesTable">
+          <thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Subjects Section -->
+      <div id="subjects" class="section" style="display:none;">
+        <h2>Manage Subjects</h2>
+        <form id="addSubjectForm" class="mb-3">
+          <div class="row">
+            <div class="col-md-3"><input type="text" class="form-control" id="subCode" placeholder="Code" required></div>
+            <div class="col-md-3"><input type="text" class="form-control" id="subName" placeholder="Name" required></div>
+            <div class="col-md-3"><select class="form-control" id="subCourse" required><option value="">Select Course</option></select></div>
+            <div class="col-md-2"><input type="number" class="form-control" id="subSem" placeholder="Semester" min="1" required></div>
+            <div class="col-md-1"><button type="submit" class="btn btn-success w-100">Add</button></div>
+          </div>
+        </form>
+        <table class="table" id="subjectsTable">
+          <thead><tr><th>ID</th><th>Code</th><th>Name</th><th>Course</th><th>Semester</th><th>Actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Students Section -->
+      <div id="students" class="section" style="display:none;">
+        <div class="section-header-admin">
+          <h3>👥 Manage Students</h3>
+          <div class="timestamp" id="studentsTimestamp"></div>
+        </div>
+        
+        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 25px;">
+          <h5 style="margin-bottom: 15px; color: #333; font-weight: 700;">Add New Student</h5>
+          <form id="addStudentForm" class="mb-3">
+            <div class="row">
+              <div class="col-md-2"><input type="text" class="form-control form-control-enhanced" id="stuName" placeholder="Name" required></div>
+              <div class="col-md-2"><input type="text" class="form-control form-control-enhanced" id="rollNo" placeholder="Roll No" required></div>
+              <div class="col-md-2"><input type="email" class="form-control form-control-enhanced" id="stuEmail" placeholder="Email"></div>
+              <div class="col-md-2"><select class="form-control form-control-enhanced" id="stuDept" required><option value="">Dept</option></select></div>
+              <div class="col-md-2"><select class="form-control form-control-enhanced" id="stuCourse" required><option value="">Course</option></select></div>
+              <div class="col-md-1"><input type="number" class="form-control form-control-enhanced" id="stuSem" placeholder="Sem" min="1" required></div>
+              <div class="col-md-1"><input type="text" class="form-control form-control-enhanced" id="stuSection" placeholder="Section" required></div>
+            </div>
+            <button type="submit" class="btn btn-professional mt-2">➕ Add Student</button>
+          </form>
+        </div>
+
+        <div class="section-header-admin">
+          <h5 style="margin:0;">Student List</h5>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+          <input type="text" class="form-control form-control-enhanced" id="stuSearch" placeholder="🔍 Search by name or roll number...">
+        </div>
+        
+        <div class="data-table-wrapper">
+          <table class="table table-hover" id="studentsTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Roll No</th>
+                <th>Email</th>
+                <th>Course/Sem/Sec</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Faculty Section -->
+      <div id="faculty" class="section" style="display:none;">
+        <div class="section-header-admin">
+          <h3>👨‍🏫 Manage Faculty</h3>
+          <div class="timestamp" id="facultyTimestamp"></div>
+        </div>
+        
+        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 25px;">
+          <h5 style="margin-bottom: 15px; color: #333; font-weight: 700;">Add New Faculty</h5>
+          <form id="addFacultyForm" class="mb-3">
+            <div class="row">
+              <div class="col-md-3"><input type="text" class="form-control form-control-enhanced" id="facName" placeholder="Name" required></div>
+              <div class="col-md-3"><input type="email" class="form-control form-control-enhanced" id="facEmail" placeholder="Email"></div>
+              <div class="col-md-3"><input type="tel" class="form-control form-control-enhanced" id="facContact" placeholder="Contact"></div>
+              <div class="col-md-3"><select class="form-control form-control-enhanced" id="facDept" required><option value="">Dept</option></select></div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-4"><input type="text" class="form-control form-control-enhanced" id="facDesignation" placeholder="Designation" value="Faculty"></div>
+              <div class="col-md-4"><input type="text" class="form-control form-control-enhanced" id="facQualification" placeholder="Qualification"></div>
+            </div>
+            <button type="submit" class="btn btn-professional mt-2">➕ Add Faculty</button>
+          </form>
+        </div>
+
+        <div class="section-header-admin">
+          <h5 style="margin:0;">Faculty List</h5>
+        </div>
+        
+        <div class="data-table-wrapper">
+          <table class="table table-hover" id="facultyTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Designation</th>
+                <th>Contact</th>
+                <th>Department</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Allocations Section -->
+      <div id="allocations" class="section" style="display:none;">
+        <div class="section-header-admin">
+          <h3>🎓 Subject Allocations</h3>
+          <div class="timestamp" id="allocationsTimestamp"></div>
+        </div>
+        
+        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 25px;">
+          <h5 style="margin-bottom: 15px; color: #333; font-weight: 700;">Allocate Subject to Faculty</h5>
+          <form id="addAllocationForm" class="mb-3">
+            <div class="row">
+              <div class="col-md-3"><select class="form-control form-control-enhanced" id="allocFac" required><option value="">Faculty</option></select></div>
+              <div class="col-md-3"><select class="form-control form-control-enhanced" id="allocSub" required><option value="">Subject</option></select></div>
+              <div class="col-md-2"><input type="number" class="form-control form-control-enhanced" id="allocSem" placeholder="Semester" required></div>
+              <div class="col-md-2"><input type="text" class="form-control form-control-enhanced" id="allocSection" placeholder="Section" required></div>
+              <div class="col-md-2"><input type="text" class="form-control form-control-enhanced" id="allocYear" placeholder="Year" value="2025" required></div>
+            </div>
+            <button type="submit" class="btn btn-professional mt-2">✓ Allocate</button>
+          </form>
+        </div>
+
+        <div class="section-header-admin">
+          <h5 style="margin:0;">Active Allocations</h5>
+        </div>
+        
+        <div class="data-table-wrapper">
+          <table class="table table-hover" id="allocationsTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Faculty</th>
+                <th>Subject</th>
+                <th>Sem/Section/Year</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Reports Section -->
+      <div id="reports" class="section" style="display:none;">
+        <div class="section-header-admin">
+          <h3>📈 Reports & Analytics</h3>
+          <div class="timestamp" id="reportsTimestamp"></div>
+        </div>
+
+        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 25px;">
+          <h5 style="margin-bottom: 15px; color: #333; font-weight: 700;">Report Filters</h5>
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label style="font-size: 13px; color: #666; font-weight: 600; margin-bottom: 5px; display: block;">Report Type</label>
+              <select class="form-control form-control-enhanced" id="reportType">
+                <option>Student-wise</option>
+                <option>Subject-wise</option>
+                <option>Defaulter List</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label style="font-size: 13px; color: #666; font-weight: 600; margin-bottom: 5px; display: block;">Department</label>
+              <select class="form-control form-control-enhanced" id="reportDept"><option value="">All Departments</option></select>
+            </div>
+            <div class="col-md-2">
+              <label style="font-size: 13px; color: #666; font-weight: 600; margin-bottom: 5px; display: block;">From Date</label>
+              <input type="date" class="form-control form-control-enhanced" id="dateFrom">
+            </div>
+            <div class="col-md-2">
+              <label style="font-size: 13px; color: #666; font-weight: 600; margin-bottom: 5px; display: block;">To Date</label>
+              <input type="date" class="form-control form-control-enhanced" id="dateTo">
+            </div>
+            <div class="col-md-2">
+              <label style="font-size: 13px; color: #666; font-weight: 600; margin-bottom: 5px; display: block;">Threshold (%)</label>
+              <input type="number" class="form-control form-control-enhanced" id="threshold" placeholder="75" value="75" min="0" max="100">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <button class="btn btn-professional" onclick="generateReport()" style="background: #667eea; color: white; border: none; margin-right: 10px;">📊 Generate Report</button>
+              <button class="btn btn-professional" onclick="exportReport()" style="background: #764ba2; color: white; border: none;">🖨️ Export/Print</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+          <div class="section-header-admin">
+            <h5 style="margin:0;">Report Results</h5>
+          </div>
+          <div class="data-table-wrapper">
+            <div id="reportOutput" style="min-height: 100px; padding: 20px; text-align: center; color: #999;">
+              📊 Generate a report to see results here...
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+    <p>&copy; 2025 College Attendance System v1.0</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <div id="globalSpinner" style="display:none;"></div>
+  <script src="/attendance-system/js/script.js" defer></script>
+  <script>
+    // Admin-specific scripts
+    let deptChart; // For chart
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wait for data to be initialized from database
+      let attempts = 0;
+      const checkDataReady = setInterval(function() {
+        attempts++;
+        console.log('Checking data ready... Attempt', attempts, 'Students:', typeof data !== 'undefined' ? data.students.length : 0);
+        if (data.students.length > 0) {
+          clearInterval(checkDataReady);
+          console.log('Admin page loading... Data is ready!');
+          console.log('Data available:', typeof data !== 'undefined' ? 'YES' : 'NO');
+          console.log('Students:', typeof data !== 'undefined' ? data.students.length : 0);
+          
+          const user = getCurrentUser();
+          if (!user || user.role !== 'admin') {
+            window.location.href = 'index.html';
+            return;
+          }
+          updateHeader();
+          buildSidebar('admin');
+          showSection('adminDash');
+          loadSectionContent('adminDash');
+          
+          // Form event listeners
+          const addDeptForm = document.getElementById('addDeptForm');
+          if (addDeptForm) addDeptForm.addEventListener('submit', addDepartment);
+          const addCourseForm = document.getElementById('addCourseForm');
+          if (addCourseForm) addCourseForm.addEventListener('submit', addCourse);
+          const addSubjectForm = document.getElementById('addSubjectForm');
+          if (addSubjectForm) addSubjectForm.addEventListener('submit', addSubject);
+          const addStudentForm = document.getElementById('addStudentForm');
+          if (addStudentForm) addStudentForm.addEventListener('submit', addStudent);
+          const addFacultyForm = document.getElementById('addFacultyForm');
+          if (addFacultyForm) addFacultyForm.addEventListener('submit', addFaculty);
+          const addAllocationForm = document.getElementById('addAllocationForm');
+          if (addAllocationForm) addAllocationForm.addEventListener('submit', addAllocation);
+          
+          // Search for students
+          const stuSearch = document.getElementById('stuSearch');
+          if (stuSearch) {
+            stuSearch.addEventListener('input', function() {
+              loadSectionContent('students');
+            });
+          }
+        }
+        // Timeout after 5 seconds
+        if (attempts > 50) {
+          clearInterval(checkDataReady);
+          console.log('Data loading timeout - falling back to empty data');
+          console.log('Admin page loading with fallback...');
+          
+          const user = getCurrentUser();
+          if (!user || user.role !== 'admin') {
+            window.location.href = 'index.html';
+            return;
+          }
+          updateHeader();
+          buildSidebar('admin');
+          showSection('adminDash');
+          loadSectionContent('adminDash');
+          
+          // Still attach form listeners
+          const addDeptForm = document.getElementById('addDeptForm');
+          if (addDeptForm) addDeptForm.addEventListener('submit', addDepartment);
+          const addCourseForm = document.getElementById('addCourseForm');
+          if (addCourseForm) addCourseForm.addEventListener('submit', addCourse);
+          const addSubjectForm = document.getElementById('addSubjectForm');
+          if (addSubjectForm) addSubjectForm.addEventListener('submit', addSubject);
+          const addStudentForm = document.getElementById('addStudentForm');
+          if (addStudentForm) addStudentForm.addEventListener('submit', addStudent);
+          const addFacultyForm = document.getElementById('addFacultyForm');
+          if (addFacultyForm) addFacultyForm.addEventListener('submit', addFaculty);
+          const addAllocationForm = document.getElementById('addAllocationForm');
+          if (addAllocationForm) addAllocationForm.addEventListener('submit', addAllocation);
+          
+          const stuSearch = document.getElementById('stuSearch');
+          if (stuSearch) {
+            stuSearch.addEventListener('input', function() {
+              loadSectionContent('students');
+            });
+          }
+        }
+      }, 100);
+    });
+
+    function loadSectionContent(sectionId) {
+      if (sectionId === 'tenDayAnalytics') {
+        loadTenDayAnalytics();
+        // Add timestamp
+        const timestamp = document.getElementById('analyticsTimestamp');
+        if (timestamp) timestamp.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+      } else if (sectionId === 'adminDash') {
+        document.getElementById('totalStudents').textContent = data.students.length;
+        document.getElementById('totalFaculty').textContent = data.faculty.length;
+        document.getElementById('totalSubjects').textContent = data.subjects.length;
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('todaySessions').textContent = data.attendanceSessions.filter(s => s.date === today).length;
+        
+        // Add timestamp
+        const timestamp = document.getElementById('dashTimestamp');
+        if (timestamp) timestamp.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+        
+        // Simple bar chart for depts (using Chart.js)
+        const ctx = document.getElementById('deptChart').getContext('2d');
+        if (deptChart) deptChart.destroy();
+        const deptPercs = {}; // Calc per dept
+        data.departments.forEach(dept => {
+          const deptStudents = data.students.filter(s => s.deptId === dept.id);
+          let totalClasses = 0, attended = 0;
+          deptStudents.forEach(stu => {
+            totalClasses += data.attendanceSessions.length; // Simplified
+            attended += data.attendanceDetails.filter(d => d.studentId === stu.id && d.status === 'Present').length;
+          });
+          deptPercs[dept.name] = deptStudents.length ? (attended / (totalClasses * deptStudents.length)) * 100 : 0;
+        });
+        deptChart = new Chart(ctx, {
+          type: 'bar',
+          data: { labels: Object.keys(deptPercs), datasets: [{ label: 'Avg %', data: Object.values(deptPercs), backgroundColor: ['rgba(102, 126, 234, 0.7)', 'rgba(118, 75, 162, 0.7)'] }] },
+          options: { scales: { y: { beginAtZero: true, max: 100 } } }
+        });
+      } else if (sectionId === 'depts') {
+        const tbody = document.querySelector('#deptsTable tbody');
+        tbody.innerHTML = data.departments.map(d => 
+          `<tr><td>${d.id}</td><td>${d.name}</td><td>${d.description || ''}</td><td><button class="btn btn-sm btn-warning" onclick="editDept(${d.id})">Edit</button> <button class="btn btn-sm btn-danger" onclick="deleteDept(${d.id})">Delete</button></td></tr>`
+        ).join('');
+      } else if (sectionId === 'courses') {
+        populateSelect('courseDept', data.departments, 'id', 'name');
+        const tbody = document.querySelector('#coursesTable tbody');
+        tbody.innerHTML = data.courses.map(c => {
+          const dept = data.departments.find(d => d.id === c.deptId);
+          return `<tr><td>${c.id}</td><td>${c.name}</td><td>${dept ? dept.name : ''}</td><td><button class="btn btn-sm btn-warning" onclick="editCourse(${c.id})">Edit</button> <button class="btn btn-sm btn-danger" onclick="deleteCourse(${c.id})">Delete</button></td></tr>`;
+        }).join('');
+      } else if (sectionId === 'subjects') {
+        populateSelect('subCourse', data.courses, 'id', 'name');
+        const tbody = document.querySelector('#subjectsTable tbody');
+        tbody.innerHTML = data.subjects.map(s => {
+          const course = data.courses.find(c => c.id === s.courseId);
+          return `<tr><td>${s.id}</td><td>${s.code}</td><td>${s.name}</td><td>${course ? course.name : ''}</td><td>${s.semester}</td><td><button class="btn btn-sm btn-warning" onclick="editSubject(${s.id})">Edit</button> <button class="btn btn-sm btn-danger" onclick="deleteSubject(${s.id})">Delete</button></td></tr>`;
+        }).join('');
+      } else if (sectionId === 'students') {
+        populateSelect('stuDept', data.departments, 'id', 'name');
+        populateSelect('stuCourse', data.courses, 'id', 'name');
+        const searchElement = document.getElementById('stuSearch');
+        const search = (searchElement ? searchElement.value : '').toLowerCase();
+        const filteredStudents = data.students.filter(s => s.name.toLowerCase().includes(search) || s.rollNo.toLowerCase().includes(search));
+        const tbody = document.querySelector('#studentsTable tbody');
+        if (!tbody) {
+          console.error('Students table tbody not found');
+          return;
+        }
+        const formattedRows = filteredStudents.map((s, i) => {
+          try {
+            const formatted = formatStudentRow(s, i);
+            const dept = data.departments.find(d => d.id === s.deptId);
+            const course = data.courses.find(c => c.id === s.courseId);
+            return {
+              ...formatted,
+              dept: dept?.name || '-',
+              course: course?.name || '-'
+            };
+          } catch (e) {
+            console.error('Error formatting student row:', e, s);
+            return null;
+          }
+        }).filter(r => r !== null);
+        tbody.innerHTML = formattedRows.map(row => `
+          <tr class="data-row" data-student-id="${row.id}">
+            <td>${row.id}</td>
+            <td><strong>${row.name}</strong></td>
+            <td>${row.rollNo}</td>
+            <td>${row.email || '-'}</td>
+            <td>${row.course} / ${row.semester} / ${row.section}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-warning" onclick="editStudent(${row.id})">Edit</button>
+              <button class="btn btn-sm btn-outline-danger" onclick="deleteStudent(${row.id})">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+        // Add timestamp
+        const timestamp = document.getElementById('studentsTimestamp');
+        if (timestamp) timestamp.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+      } else if (sectionId === 'faculty') {
+        populateSelect('facDept', data.departments, 'id', 'name');
+        const tbody = document.querySelector('#facultyTable tbody');
+        const formattedRows = data.faculty.map((f, i) => {
+          const formatted = formatFacultyRow(f, i);
+          const dept = data.departments.find(d => d.id === f.deptId);
+          return {
+            ...formatted,
+            dept: dept?.name || '-'
+          };
+        });
+        tbody.innerHTML = formattedRows.map(row => `
+          <tr class="data-row" data-faculty-id="${row.id}">
+            <td>${row.id}</td>
+            <td><strong>${row.name}</strong></td>
+            <td>${row.designation || '-'}</td>
+            <td>${row.contact || '-'}</td>
+            <td>${row.dept}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-warning" onclick="editFaculty(${row.id})">Edit</button>
+              <button class="btn btn-sm btn-outline-danger" onclick="deleteFaculty(${row.id})">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+        // Add timestamp
+        const timestamp = document.getElementById('facultyTimestamp');
+        if (timestamp) timestamp.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+      } else if (sectionId === 'allocations') {
+        populateSelect('allocFac', data.faculty, 'id', 'name');
+        populateSelect('allocSub', data.subjects, 'id', 'code + " - " + name');
+        const tbody = document.querySelector('#allocationsTable tbody');
+        tbody.innerHTML = data.allocations.map(a => {
+          const fac = data.faculty.find(f => f.id === a.facultyId);
+          const sub = data.subjects.find(s => s.id === a.subjectId);
+          return `<tr><td>${a.id}</td><td>${fac ? fac.name : ''}</td><td>${sub ? sub.code + ' - ' + sub.name : ''}</td><td>${a.semester}/${a.section}/${a.academicYear}</td><td><button class="btn btn-sm btn-warning" onclick="editAllocation(${a.id})">Edit</button> <button class="btn btn-sm btn-danger" onclick="deleteAllocation(${a.id})">Delete</button></td></tr>`;
+        }).join('');
+      }
+    }
+
+    // Add functions (example for addDepartment; similar for others)
+    function addDepartment(e) {
+      e.preventDefault();
+      const name = document.getElementById('deptName').value.trim();
+      const desc = document.getElementById('deptDesc').value.trim();
+      if (!name) return alert('Name required');
+      const newDept = { id: data.departments.length + 1, name, description: desc };
+      data.departments.push(newDept);
+      saveData();
+      loadSectionContent('depts');
+      e.target.reset();
+    }
+
+    function addCourse(e) {
+      e.preventDefault();
+      const name = document.getElementById('courseName').value.trim();
+      const deptId = parseInt(document.getElementById('courseDept').value);
+      if (!name || !deptId) return alert('Name and Dept required');
+      const newCourse = { id: data.courses.length + 1, name, deptId };
+      data.courses.push(newCourse);
+      saveData();
+      loadSectionContent('courses');
+      e.target.reset();
+    }
+
+    function addSubject(e) {
+      e.preventDefault();
+      const code = document.getElementById('subCode').value.trim();
+      const name = document.getElementById('subName').value.trim();
+      const courseId = parseInt(document.getElementById('subCourse').value);
+      const semester = parseInt(document.getElementById('subSem').value);
+      if (!code || !name || !courseId || !semester) return alert('All fields required');
+      const newSub = { id: data.subjects.length + 1, code, name, courseId, semester };
+      data.subjects.push(newSub);
+      saveData();
+      loadSectionContent('subjects');
+      e.target.reset();
+    }
+
+    function addStudent(e) {
+      e.preventDefault();
+      const name = document.getElementById('stuName').value.trim();
+      const rollNo = document.getElementById('rollNo').value.trim();
+      const email = document.getElementById('stuEmail').value.trim();
+      const deptId = parseInt(document.getElementById('stuDept').value);
+      const courseId = parseInt(document.getElementById('stuCourse').value);
+      const semester = parseInt(document.getElementById('stuSem').value);
+      const section = document.getElementById('stuSection').value.trim();
+      
+      if (!name || !rollNo || !deptId || !courseId || !semester || !section) {
+        showToast('❌ All fields are required!', 'error', 2000);
+        return;
+      }
+      
+      // Send to database API
+      fetch('/attendance-system/api/api_students_manage.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          action: 'addStudent',
+          name, rollNo, email, deptId, courseId, semester, section
+        })
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.status === 'success') {
+          // Add to in-memory data
+          data.students.push(result.data);
+          data.users.push({
+            id: result.data.userId,
+            username: rollNo.toLowerCase(),
+            password: 'default123',
+            role: 'student',
+            email
+          });
+          showToast('✅ Student added to database!', 'success', 2000);
+          loadSectionContent('students');
+          e.target.reset();
+        } else {
+          showToast('❌ ' + (result.message || 'Failed to add student'), 'error', 2000);
+        }
+      })
+      .catch(err => {
+        console.error('Error:', err);
+        showToast('❌ Network error', 'error', 2000);
+      });
+    }
+
+    function addFaculty(e) {
+      e.preventDefault();
+      const name = document.getElementById('facName').value.trim();
+      const email = document.getElementById('facEmail').value.trim();
+      const contact = document.getElementById('facContact').value.trim();
+      const deptId = parseInt(document.getElementById('facDept').value);
+      const designation = document.getElementById('facDesignation')?.value.trim() || 'Faculty';
+      const qualification = document.getElementById('facQualification')?.value.trim() || '';
+      
+      if (!name || !deptId) {
+        showToast('❌ Name and Department are required!', 'error', 2000);
+        return;
+      }
+      
+      // Send to database API
+      fetch('/attendance-system/api/api_faculty_manage.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          action: 'addFaculty',
+          name, email, contact, deptId, designation, qualification
+        })
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.status === 'success') {
+          // Add to in-memory data
+          data.faculty.push(result.data);
+          if (result.data.userId) {
+            data.users.push({
+              id: result.data.userId,
+              username: name.toLowerCase().replace(' ', ''),
+              password: 'faculty123',
+              role: 'faculty',
+              email: result.data.email
+            });
+          }
+          showToast('✅ Faculty added to database!', 'success', 2000);
+          loadSectionContent('faculty');
+          e.target.reset();
+        } else {
+          showToast('❌ ' + (result.message || 'Failed to add faculty'), 'error', 2000);
+        }
+      })
+      .catch(err => {
+        console.error('Error:', err);
+        showToast('❌ Network error', 'error', 2000);
+      });
+    }
+
+    function addAllocation(e) {
+      e.preventDefault();
+      const facultyId = parseInt(document.getElementById('allocFac').value);
+      const subjectId = parseInt(document.getElementById('allocSub').value);
+      const semester = parseInt(document.getElementById('allocSem').value);
+      const section = document.getElementById('allocSection').value.trim();
+      const academicYear = document.getElementById('allocYear').value.trim();
+      if (!facultyId || !subjectId || !semester || !section || !academicYear) return alert('All fields required');
+      const newAlloc = { id: data.allocations.length + 1, facultyId, subjectId, semester, section, academicYear };
+      data.allocations.push(newAlloc);
+      saveData();
+      loadSectionContent('allocations');
+      e.target.reset();
+    }
+
+    // Delete functions (example; similar for edit - use prompts for simplicity)
+    function deleteDept(id) {
+      if (confirm('Delete?')) {
+        data.departments = data.departments.filter(d => d.id !== id);
+        saveData();
+        loadSectionContent('depts');
+      }
+    }
+    // Repeat pattern for deleteCourse, deleteSubject, deleteStudent, deleteFaculty, deleteAllocation
+    function deleteStudent(id) {
+      if (confirm('Are you sure? This will delete the student from the database.')) {
+        // Send delete request to API
+        fetch('/attendance-system/api/api_students_manage.php', {
+          method: 'DELETE',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            action: 'deleteStudent',
+            id: id
+          })
+        })
+        .then(response => response.json())
+        .then(result => {
+          if (result.status === 'success') {
+            // Remove from in-memory data
+            const student = data.students.find(s => s.id === id);
+            data.students = data.students.filter(s => s.id !== id);
+            if (student) {
+              data.users = data.users.filter(u => u.id !== student.userId);
+            }
+            showToast('✅ Student deleted from database!', 'success', 2000);
+            loadSectionContent('students');
+          } else {
+            showToast('❌ ' + (result.message || 'Failed to delete student'), 'error', 2000);
+          }
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          showToast('❌ Network error', 'error', 2000);
+        });
+      }
+    }
+
+    function deleteFaculty(id) {
+      if (confirm('Are you sure? This will delete the faculty member from the database.')) {
+        // Send delete request to API
+        fetch('/attendance-system/api/api_faculty_manage.php', {
+          method: 'DELETE',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            action: 'deleteFaculty',
+            id: id
+          })
+        })
+        .then(response => response.json())
+        .then(result => {
+          if (result.status === 'success') {
+            // Remove from in-memory data
+            const faculty = data.faculty.find(f => f.id === id);
+            data.faculty = data.faculty.filter(f => f.id !== id);
+            if (faculty) {
+              data.users = data.users.filter(u => u.id !== faculty.userId);
+            }
+            showToast('✅ Faculty deleted from database!', 'success', 2000);
+            loadSectionContent('faculty');
+          } else {
+            showToast('❌ ' + (result.message || 'Failed to delete faculty'), 'error', 2000);
+          }
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          showToast('❌ Network error', 'error', 2000);
+        });
+      }
+    }
+    // ... (add similar for others: deleteCourse, etc.)
+
+    // Edit functions (simple prompt-based for demo)
+    function editStudent(id) {
+      const stu = data.students.find(s => s.id === id);
+      if (stu && prompt('Edit Name:', stu.name)) { // Extend for other fields
+        stu.name = prompt('New Name:', stu.name);
+        saveData();
+        loadSectionContent('students');
+      }
+    }
+    // Similar for editDept, editCourse, etc.
+
+    function generateReport() {
+      const type = document.getElementById('reportType').value;
+      const deptId = parseInt(document.getElementById('reportDept').value) || 0;
+      const from = document.getElementById('dateFrom').value;
+      const to = document.getElementById('dateTo').value;
+      const threshold = parseInt(document.getElementById('threshold').value);
+      let rows = [];
+
+      if (type === 'Defaulter List') {
+        const filteredStudents = deptId ? data.students.filter(s => s.deptId === deptId) : data.students;
+        filteredStudents.forEach(stu => {
+          const sessions = data.attendanceSessions.filter(s => !from || s.date >= from).filter(s => !to || s.date <= to);
+          const total = sessions.length;
+          const attended = data.attendanceDetails.filter(d => sessions.some(ses => ses.id === d.sessionId) && d.studentId === stu.id && d.status === 'Present').length;
+          const perc = total ? (attended / total) * 100 : 0;
+          if (perc < threshold) {
+            rows.push({
+              name: stu.name,
+              rollNo: stu.rollNo,
+              subject: 'Overall',
+              total: total,
+              attended: attended,
+              percentage: perc.toFixed(2),
+              status: perc < 75 ? 'Defaulter' : 'Weak'
+            });
+          }
+        });
+      } else if (type === 'Student-wise') {
+        data.students.forEach(stu => {
+          const subjects = data.subjects.filter(s => s.courseId === stu.courseId);
+          subjects.forEach(sub => {
+            const alloc = data.allocations.find(a => a.subjectId === sub.id && a.semester === stu.semester && a.section === stu.section);
+            if (alloc) {
+              const sessions = data.attendanceSessions.filter(s => s.allocationId === alloc.id);
+              const total = sessions.length;
+              const attended = data.attendanceDetails.filter(d => sessions.some(ses => ses.id === d.sessionId) && d.studentId === stu.id && d.status === 'Present').length;
+              const perc = total ? (attended / total) * 100 : 0;
+              rows.push({
+                name: stu.name,
+                rollNo: stu.rollNo,
+                subject: sub.name,
+                total: total,
+                attended: attended,
+                percentage: perc.toFixed(2),
+                status: perc >= 85 ? 'Good' : perc >= 75 ? 'Average' : 'Poor'
+              });
+            }
+          });
+        });
+      }
+
+      // Render professional table
+      let html = `<div class="data-table-wrapper">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Name/Roll</th>
+              <th>Subject</th>
+              <th>Total Sessions</th>
+              <th>Attended</th>
+              <th>Percentage</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>`;
+      
+      rows.forEach(row => {
+        const statusBadge = renderStatusBadge(row.status);
+        html += `<tr>
+          <td>${row.name} (${row.rollNo})</td>
+          <td>${row.subject}</td>
+          <td>${row.total}</td>
+          <td>${row.attended}</td>
+          <td><strong>${row.percentage}%</strong></td>
+          <td>${statusBadge}</td>
+        </tr>`;
+      });
+
+      html += `</tbody></table></div>`;
+      
+      const reportOutput = document.getElementById('reportOutput');
+      if (rows.length > 0) {
+        reportOutput.innerHTML = html;
+        showToast(`✓ Report generated with ${rows.length} records`, 'success', 2000);
+      } else {
+        reportOutput.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">No records found matching your criteria.</div>';
+        showToast('⚠ No records found', 'warning', 2000);
+      }
+    }
+
+    function exportReport() {
+      const report = document.getElementById('reportOutput');
+      if (report.innerHTML) {
+        window.print(); // Simple print; for PDF, use jsPDF lib
+      } else {
+        alert('Generate report first!');
+      }
+    }
+
+    // Helper: Populate select
+    function populateSelect(selectId, items, valueKey, textKey, callback) {
+      const select = document.getElementById(selectId);
+      select.innerHTML = '<option value="">Select...</option>' + items.map(item => `<option value="${item[valueKey]}">${typeof textKey === 'function' ? textKey(item) : item[textKey]}</option>`).join('');
+      if (callback) callback();
+    }
+
+    // For reports dept select
+    populateSelect('reportDept', data.departments, 'id', 'name');
+
+    // 10-Day Analytics
+    function loadTenDayAnalytics() {
+      const today = new Date();
+      const tenDaysAgo = new Date(today);
+      tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+      
+      // Get sessions from past 10 days
+      const tenDaySessions = data.attendanceSessions.filter(s => {
+        const sessDate = new Date(s.date);
+        return sessDate >= tenDaysAgo && sessDate <= today;
+      });
+      
+      // Overall stats
+      document.getElementById('anal-sessions').textContent = tenDaySessions.length;
+      
+      // Calculate student-wise attendance for 10 days
+      const studentAttendance = {};
+      data.students.forEach(stu => {
+        const stuAttendance = data.attendanceDetails.filter(d => 
+          tenDaySessions.some(s => s.id === d.sessionId) && d.studentId === stu.id
+        );
+        const total = tenDaySessions.length;
+        const present = stuAttendance.filter(d => d.status === 'Present').length;
+        const perc = total ? (present / total * 100) : 0;
+        studentAttendance[stu.id] = { rollNo: stu.rollNo, name: stu.name, deptId: stu.deptId, perc: perc, absent: total - present, total: total };
+      });
+      
+      // Average attendance
+      const students = Object.values(studentAttendance);
+      const avgPerc = students.length ? students.reduce((sum, s) => sum + s.perc, 0) / students.length : 0;
+      document.getElementById('anal-avgperc').textContent = avgPerc.toFixed(1) + '%';
+      
+      // Defaulters and good standing
+      const defaulters = students.filter(s => s.perc < 75);
+      const goodStanding = students.filter(s => s.perc >= 75);
+      document.getElementById('anal-defaulters').textContent = defaulters.length;
+      document.getElementById('anal-goodstand').textContent = goodStanding.length;
+      
+      // Department-wise analysis
+      const deptAnalysis = {};
+      data.departments.forEach(dept => {
+        const deptStudents = students.filter(s => s.deptId === dept.id);
+        const deptDefaulters = deptStudents.filter(s => s.perc < 75);
+        const deptAvgPerc = deptStudents.length ? deptStudents.reduce((sum, s) => sum + s.perc, 0) / deptStudents.length : 0;
+        deptAnalysis[dept.id] = { name: dept.name, students: deptStudents.length, avgPerc: deptAvgPerc, defaulters: deptDefaulters.length };
+      });
+      
+      const deptBody = document.querySelector('#deptAnalTable tbody');
+      deptBody.innerHTML = Object.values(deptAnalysis).map(dept => 
+        `<tr><td>${dept.name}</td><td>${dept.students}</td><td>${dept.avgPerc.toFixed(1)}%</td><td><span class="badge bg-danger">${dept.defaulters}</span></td></tr>`
+      ).join('');
+      
+      // Subject-wise analysis
+      const subAnalysis = {};
+      data.subjects.forEach(sub => {
+        const subSessions = tenDaySessions.filter(s => {
+          const alloc = data.allocations.find(a => a.id === s.allocationId);
+          return alloc && alloc.subjectId === sub.id;
+        });
+        const subAttendance = data.attendanceDetails.filter(d => subSessions.some(s => s.id === d.sessionId));
+        const subPresent = subAttendance.filter(d => d.status === 'Present').length;
+        const subTotal = subAttendance.length;
+        const subAvgPerc = subTotal ? (subPresent / subTotal * 100) : 0;
+        const lowCount = subAttendance.filter(d => {
+          const stuAtt = studentAttendance[d.studentId];
+          return stuAtt && stuAtt.perc < 75;
+        }).length;
+        subAnalysis[sub.id] = { code: sub.code, name: sub.name, sessions: subSessions.length, avgPerc: subAvgPerc, lowAttendance: lowCount };
+      });
+      
+      const subBody = document.querySelector('#subAnalTable tbody');
+      subBody.innerHTML = Object.values(subAnalysis).map(sub => 
+        `<tr><td>${sub.code} - ${sub.name}</td><td>${sub.sessions}</td><td>${sub.avgPerc.toFixed(1)}%</td><td><span class="badge bg-warning">${sub.lowAttendance}</span></td></tr>`
+      ).join('');
+      
+      // Defaulter list
+      const defaulterBody = document.querySelector('#defaultersTable tbody');
+      defaulterBody.innerHTML = defaulters.map(stu => {
+        const dept = data.departments.find(d => d.id === stu.deptId);
+        const statusBadge = stu.perc < 50 ? '<span class="badge bg-danger">Critical</span>' : '<span class="badge bg-warning">Warning</span>';
+        return `<tr><td>${stu.rollNo}</td><td>${stu.name}</td><td>${dept ? dept.name : ''}</td><td>${stu.perc.toFixed(1)}%</td><td>${stu.absent}/${stu.total}</td><td>${statusBadge}</td></tr>`;
+      }).join('');
+      
+      // Add filter functionality
+      document.getElementById('defaulterFilter').addEventListener('keyup', function(e) {
+        const filter = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#defaultersTable tbody tr');
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(filter) ? '' : 'none';
+        });
+      });
+    }
+  </script>
+</body>
+</html>
